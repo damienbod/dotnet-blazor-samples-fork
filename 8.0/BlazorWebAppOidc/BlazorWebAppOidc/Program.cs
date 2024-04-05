@@ -10,14 +10,20 @@ using BlazorWebAppOidc.Client.Weather;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
-const string MS_OIDC_SCHEME = "MicrosoftOidc";
+const string OIDC_SCHEME = "MicrosoftOidc";
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddAuthentication(MS_OIDC_SCHEME)
-    .AddOpenIdConnect(MS_OIDC_SCHEME, options =>
+builder.Services.AddAuthentication(OIDC_SCHEME)
+    .AddOpenIdConnect(OIDC_SCHEME, options =>
     {
+        // From appsettings.json, keyvault, user-secrets
+        // "OpenIDConnectSettings": {
+        //          "Authority": "https://localhost:44318",
+        //  "ClientId": "oidc-pkce-confidential",
+        //  "ClientSecret": "--secret-in-key-vault-user-secrets--"
+        // },
         builder.Configuration.GetSection("OpenIDConnectSettings").Bind(options);
 
         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -25,7 +31,7 @@ builder.Services.AddAuthentication(MS_OIDC_SCHEME)
 
         options.SaveTokens = true;
         options.GetClaimsFromUserInfoEndpoint = true;
-        options.MapInboundClaims = false; // Remove MS magic mappings
+        options.MapInboundClaims = false; // Remove Microsoft mappings
         options.TokenValidationParameters = new TokenValidationParameters
         {
             NameClaimType = "name"
@@ -38,7 +44,7 @@ builder.Services.AddAuthentication(MS_OIDC_SCHEME)
 // new access token saved inside. If the refresh fails, the user will be signed
 // out. OIDC connect options are set for saving tokens and the offline access
 // scope.
-builder.Services.ConfigureCookieOidcRefresh(CookieAuthenticationDefaults.AuthenticationScheme, MS_OIDC_SCHEME);
+builder.Services.ConfigureCookieOidcRefresh(CookieAuthenticationDefaults.AuthenticationScheme, OIDC_SCHEME);
 
 builder.Services.AddAuthorization();
 
