@@ -20,7 +20,7 @@ builder.Services.AddAuthentication(OIDC_SCHEME)
     {
         // From appsettings.json, keyvault, user-secrets
         // "OpenIDConnectSettings": {
-        //          "Authority": "https://localhost:44318",
+        //  "Authority": "https://localhost:44318",
         //  "ClientId": "oidc-pkce-confidential",
         //  "ClientSecret": "--secret-in-key-vault-user-secrets--"
         // },
